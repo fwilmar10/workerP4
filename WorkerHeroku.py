@@ -65,7 +65,12 @@ conn_sqs = boto.sqs.connect_to_region(
 
 q=conn_sqs.get_queue('ConvertVideo')
 
+if not os.path.exists('orig'):
+    os.makedirs('orig')
 
+if not os.path.exists('convert'):
+    os.makedirs('convert')
+	
 ### INICIA PROCESO ##
 
 while True:
