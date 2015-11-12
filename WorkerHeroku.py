@@ -87,7 +87,7 @@ while True:
 		print '-- Descargando video .... '+nombreVideo
 		video= bucket.get_key(pathOriginal)
 		print '-- Almacenando video .... '+nombreVideo
-		video.get_contents_to_filename('/tmp/orig/'+nombreVideo)
+		video.get_contents_to_filename('orig/'+nombreVideo)
 		
 		pathConvertido = ''.join(pathOriginal.split('.')[:-1])
 		pathConvertido = '{}.mp4'.format(pathConvertido)
@@ -109,10 +109,10 @@ while True:
 			item['estado'] = 'Procesando'
 			tabla.put_item(Item=item)
 
-		subprocess.call(['ffmpeg', '-i', '/tmp/orig/'+nombreVideo, '-vcodec', 'libx264', '-crf', '23', '/tmp/convert/'+VideoOut])	
+		subprocess.call(['ffmpeg', '-i', 'orig/'+nombreVideo, '-vcodec', 'libx264', '-crf', '23', 'convert/'+VideoOut])	
 		print '-- Conversion finalizada --'+VideoOut
 		nk =Key(bucket, pathConvertido)
-		nk.set_contents_from_filename('/tmp/convert/'+VideoOut)	
+		nk.set_contents_from_filename('convert/'+VideoOut)	
 
 		## ACTUALIZANDO ESTADO A Convertido ##
 		#cur.execute("""UPDATE concursovideo_video  SET estado = 'Convertido',  video_convertido='"""+pathConvertido+"""'  WHERE video_original='"""+pathOriginal+"'")
@@ -139,14 +139,14 @@ while True:
 		q.delete_message(rcv_message)
 
 		## ELIMINAR ARCHIVOS ##
-		if os.path.isfile('/tmp/convert/'+VideoOut):
-			os.remove('/tmp/convert/'+VideoOut)
+		if os.path.isfile('convert/'+VideoOut):
+			os.remove('convert/'+VideoOut)
 		else:
-			print ("Error: %s file not found" % '/tmp/convert/'+VideoOut)		
-                if os.path.isfile('/tmp/orig/'+nombreVideo):
-                        os.remove('/tmp/orig/'+nombreVideo)
+			print ("Error: %s file not found" % 'convert/'+VideoOut)		
+                if os.path.isfile('orig/'+nombreVideo):
+                        os.remove('orig/'+nombreVideo)
                 else:
-                        print ("Error: %s file not found" % '/tmp/orig/'+nombreVideo)
+                        print ("Error: %s file not found" % 'orig/'+nombreVideo)
 	
 
 	
